@@ -1,0 +1,76 @@
+---
+title: "COVID-19_Data_Scraper"
+author: "Betsy Rosalen"
+date: "3/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(XML)
+library(rvest)
+```
+
+## worldometer Scraper
+
+```{r}
+
+
+######################### ----- UPDATE ME!!! ----- #########################
+last_update <- "March 23, 2020, 12:14 GMT"
+######################### ----- UPDATE ME!!! ----- #########################
+
+
+url <- "https://www.worldometers.info/coronavirus/"
+world <- read_html(url)
+data <- html_nodes(world, "table")
+worldometer <- data.frame(html_table(data[1], fill = TRUE))
+
+my_func <- function(y){as.numeric(gsub(",", "", y))}
+
+worldometer[,c(2:9)] <- lapply(worldometer[,c(2:9)], my_func)
+
+worldometer["Sys Date"] <- Sys.time()
+
+worldometer["Last updated"] <- last_update
+
+write.table(worldometer, file = "worldometer_data.txt", append = TRUE, quote = FALSE, sep = "|", col.names = FALSE)
+
+read_in_data <- read.table("worldometer_data.txt", sep = "|", row.names = NULL)
+```
+
+```{r}
+url2 <- "https://www.worldometers.info/coronavirus/country/us/"
+USA <- read_html(url2)
+data2 <- html_nodes(USA, "table")
+worldometer_usa <- data.frame(html_table(data2[1], fill = TRUE))
+
+# my_func <- function(y){as.numeric(gsub(",", "", y))}
+
+worldometer_usa[,c(2:7)] <- lapply(worldometer_usa[,c(2:7)], my_func)
+
+worldometer_usa["Sys Date"] <- Sys.time()
+
+worldometer_usa["Last updated"] <- last_update
+
+write.table(worldometer_usa, file = "worldometer_usa_data.txt", append = TRUE, quote = FALSE, sep = "|", col.names = FALSE)
+
+read_in_USA_data <- read.table("worldometer_usa_data.txt", sep = "|", row.names = NULL)
+```
+
+```{r clean_worldometer, eval = FALSE}
+read_in_data <- read.table("orig_worldometer_data.txt", sep = "\t", row.names = NULL)
+read_in_data[,c(2:9)] <- lapply(read_in_data[,c(2:9)], my_func)
+write.table(read_in_data, file = "clean_orig_worldometer_data.txt", quote = FALSE, sep = "|", col.names = FALSE)
+```
+
+### Not working NYT Scraper
+
+```{r scraper, eval = FALSE}
+url <- "https://www.nytimes.com/interactive/2020/world/coronavirus-maps.html"
+world <- read_html(url)
+data <- html_nodes(world, ".svelte-f9sygj")
+# datatable <- html_table(data, fill = TRUE)
+# datatable
+tail(data)
+```
