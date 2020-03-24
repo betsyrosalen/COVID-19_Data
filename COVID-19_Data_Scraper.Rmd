@@ -17,7 +17,7 @@ library(rvest)
 
 
 ######################### ----- UPDATE ME!!! ----- #########################
-last_update <- "March 23, 2020, 12:14 GMT"
+last_update <- "March 24, 2020, 14:08 GMT"
 ######################### ----- UPDATE ME!!! ----- #########################
 
 
@@ -52,6 +52,10 @@ worldometer_usa[,c(2:7)] <- lapply(worldometer_usa[,c(2:7)], my_func)
 worldometer_usa["Sys Date"] <- Sys.time()
 
 worldometer_usa["Last updated"] <- last_update
+
+worldometer_usa["Total recovered"] <- NA
+
+worldometer_usa <- worldometer_usa[,c(1:5,10,6:9)]
 
 write.table(worldometer_usa, file = "worldometer_usa_data.txt", append = TRUE, quote = FALSE, sep = "|", col.names = FALSE)
 
