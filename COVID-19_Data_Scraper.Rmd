@@ -16,7 +16,7 @@ library(rvest)
 ```{r}
 
 ######################### ----- UPDATE ME!!! ----- #########################
-last_update <- "March 31, 2020, 12:41 GMT"
+last_update <- "April 04, 2020, 00:55 GMT"
 ######################### ----- UPDATE ME!!! ----- #########################
 
 
@@ -28,6 +28,8 @@ worldometer <- data.frame(html_table(data[1], fill = TRUE))
 my_func <- function(y){as.numeric(gsub(",", "", y))}
 
 worldometer[,c(2:9)] <- lapply(worldometer[,c(2:9)], my_func)
+
+worldometer["1st.case"] <- NA
 
 worldometer["Sys Date"] <- Sys.time()
 
